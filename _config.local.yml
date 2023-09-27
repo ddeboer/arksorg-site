@@ -1,0 +1,8 @@
+#################
+# Site setting
+# Local overrides
+#################
+
+domain: ""
+baseurl: ""
+url: ""
