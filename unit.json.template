@@ -1,0 +1,43 @@
+{
+    "listeners": {
+        "*:${APP_PORT}": {
+            "pass": "routes/arksorg"
+        }
+    },
+    "applications": {
+        "rslv": {
+            "type": "python 3.11",
+            "working_directory": "${APP_ROOT}/resolver",
+            "path": "${APP_ROOT}/resolver",
+            "home": "${VIRTUAL_ENV}/",
+            "module": "rslv.app",
+            "callable": "app"
+        }
+    },
+    "routes": {
+        "arksorg":[
+            {
+                "match": {
+                    "uri": [
+                        "~/\\.info.*",
+                        "~/api.*",
+                        "~/([A-Za-z0-9\\/;.\\-]+(:|%3A).*)"
+                    ]
+                },
+                "action": {
+                    "pass": "applications/rslv"
+                }
+            },
+            {
+                "match": {
+                    "uri": [
+                        "/*"
+                    ]
+                },
+                "action": {
+                    "share": "${APP_ROOT}/site/${DLR}uri"
+                }
+            }
+        ]
+    }
+}
