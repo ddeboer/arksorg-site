@@ -1,0 +1,7 @@
+user: "{{ lookup('env', 'USER') | default('ezid') }}"
+group: "{{ user }}"
+app_dir: "{{ lookup('env', 'HOME') | default('ezid') }}"
+deploy_dir: "{{ app_dir }}/arksorg"
+ 
+arksorg_repo: 'https://github.com/CDLUC3/arksorg-site.git'
+arksorg_version: 'main'

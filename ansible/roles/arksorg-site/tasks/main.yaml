@@ -1,0 +1,47 @@
+---
+
+# ansible-playbook -i hosts site.yaml -CD
+# ansible-playbook -i hosts site.yaml
+#
+- name: Clone arksorg repo
+  git:
+    repo: "{{ arksorg_repo }}"
+    dest: "{{ deploy_dir }}"
+    version: "{{ arksorg_version }}"
+    force: yes
+
+- name: Install gems from arks.github.io Gemfile
+  community.general.bundler:
+    chdir: "{{deploy_dir}}/arks.github.io"
+
+- name: bundle exec jekyll
+  command:
+    chdir: "{{deploy_dir}}/arks.github.io"
+    cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
+    #argv:
+    #- bundle
+    #- exec
+    #- jekyll
+    #- build
+    #- --config
+    #- '_config.yml,../_config.local.yml'
+
+- name: Install resolver dependencies
+  pip:
+    chdir: "{{deploy_dir}}/resolver"
+    requirements: requirements.txt
+
+
+
+
+
+
+
+
+
+  
+#- block:
+#  - name: Build the site documents using Jekyll
+#    include_tasks: build_site_docs.yaml
+#  tags: build_site_docs
+

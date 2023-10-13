@@ -1,0 +1,7 @@
+# build_site_docs.yaml
+---
+
+- name: bundle exec jekyll
+  command:
+    chdir: "{{deploy_dir}}/arks.github.io"
+    cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
