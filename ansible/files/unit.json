@@ -11,7 +11,7 @@
       "path": "/ezid/arksorg/resolver",
       "home": "/ezid/venv/",
       "module": "rslv.app",
-      "callable": "app",
+      "callable": "app"
     }
   },
   "routes": {
