@@ -3,43 +3,37 @@
 # ansible-playbook -i hosts site.yaml -CD
 # ansible-playbook -i hosts site.yaml
 
-#- name: Clone arksorg repo
-#  git:
-#    repo: "{{ arksorg_repo }}"
-#    dest: "{{ deploy_dir }}"
-#    version: "{{ arksorg_version }}"
-#    force: yes
-#
-#- name: Install gems from arks.github.io Gemfile
-#  community.general.bundler:
-#    chdir: "{{deploy_dir}}/arks.github.io"
-#
-#- name: Run bundle exec jekyll to build arks.github.io site
-#  command:
-#    chdir: "{{deploy_dir}}/arks.github.io"
-#    cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
-#    #argv:
-#    #- bundle
-#    #- exec
-#    #- jekyll
-#    #- build
-#    #- --config
-#    #- '_config.yml,../_config.local.yml'
-#
-#- name: Install resolver dependencies
-#  pip:
-#    chdir: "{{deploy_dir}}/resolver"
-#    requirements: requirements.txt
+- name: Clone arksorg repo
+  git:
+    repo: "{{ arksorg_repo }}"
+    dest: "{{ deploy_dir }}"
+    version: "{{ arksorg_version }}"
+    force: yes
 
-- ansible.builtin.debug:
-    msg: "the value of foo.txt is {{ lookup('ansible.builtin.file', '/ezid/arksorg/unit.json') }}"
+- name: Install gems from arks.github.io Gemfile
+  community.general.bundler:
+    chdir: "{{deploy_dir}}/arks.github.io"
 
-#- name: Configure nginx unit
-#  uri:
-#    unix_socket: /var/run/unit/control.sock
-#    method: PUT
-#    body_format: json
-#    body: "{{ lookup('ansible.builtin.file','/ezid/arksorg/unit.json') }}"
+- name: Run bundle exec jekyll to build arks.github.io site
+  command:
+    chdir: "{{deploy_dir}}/arks.github.io"
+    cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
+
+- name: Install resolver dependencies
+  pip:
+    chdir: "{{deploy_dir}}/resolver"
+    requirements: requirements.txt
+
+#- ansible.builtin.debug:
+#    msg: "the value of foo.txt is {{ lookup('ansible.builtin.file', 'files/unit.json') }}"
+
+- name: Configure nginx unit
+  uri:
+    url: http://localhost/config/
+    unix_socket: /var/run/unit/control.sock
+    method: PUT
+    body_format: json
+    body: "{{ lookup('ansible.builtin.file','files/unit.json') }}"
 
 
 
