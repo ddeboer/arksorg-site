@@ -9,7 +9,7 @@
       "type": "python 3.11",
       "working_directory": "/ezid/arksorg/resolver",
       "path": "/ezid/arksorg/resolver",
-      "home": "/ezid/venv/",
+      "home": "/ezid/.pyenv/versions/3.11.6",
       "module": "rslv.app",
       "callable": "app"
     }
