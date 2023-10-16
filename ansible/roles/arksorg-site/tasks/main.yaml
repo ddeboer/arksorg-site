@@ -31,10 +31,18 @@
     chdir: "{{deploy_dir}}/arks.github.io"
     cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
 
+#- name: what python
+#  ansible.builtin.raw: echo $(python -c "import sys;print(sys.executable)")
+#  register: which_python
+#
+#- debug: msg="{{ which_python.stdout }}"
+
 - name: Install resolver dependencies
   pip:
     chdir: "{{deploy_dir}}/resolver"
     requirements: requirements.txt
+    virtualenv: /ezid/arksorg/venv
+    virtualenv_command: python -m venv
 
 - ansible.builtin.debug:
     msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2') }}"
