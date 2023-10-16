@@ -24,8 +24,8 @@
     chdir: "{{deploy_dir}}/resolver"
     requirements: requirements.txt
 
-#- ansible.builtin.debug:
-#    msg: "the value of foo.txt is {{ lookup('ansible.builtin.file', 'files/unit.json') }}"
+- ansible.builtin.debug:
+    msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.rb') }}"
 
 - name: Configure nginx unit
   uri:
@@ -33,7 +33,7 @@
     unix_socket: /var/run/unit/control.sock
     method: PUT
     body_format: json
-    body: "{{ lookup('ansible.builtin.file','files/unit.json') }}"
+    body: "{{ lookup('ansible.builtin.template','templates/unit.json.j2') }}"
 
 
 

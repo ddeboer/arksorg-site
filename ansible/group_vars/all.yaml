@@ -5,3 +5,4 @@ deploy_dir: "{{ app_dir }}/arksorg"
  
 arksorg_repo: 'https://github.com/CDLUC3/arksorg-site.git'
 arksorg_version: 'main'
+python_home: "/ezid/.pyenv/versions/3.11.0"
