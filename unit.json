@@ -8,8 +8,8 @@
     "rslv": {
       "type": "python 3.11",
       "working_directory": "/ezid/arksorg/resolver",
-      "path": "/ezid/arksorg/resolver",
-      "home": "/ezid/venv/",
+      "path": ["/ezid/arksorg/resolver",],
+      "home": "../venv",
       "module": "rslv.app",
       "callable": "app"
     }
