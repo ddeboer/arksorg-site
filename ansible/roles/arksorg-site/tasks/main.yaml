@@ -25,7 +25,7 @@
     requirements: requirements.txt
 
 - ansible.builtin.debug:
-    msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.rb') }}"
+    msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2') }}"
 
 - name: Configure nginx unit
   uri:
