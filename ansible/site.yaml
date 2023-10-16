@@ -1,4 +1,9 @@
 ---
+
+# Usage
+# ansible-playbook -i hosts site.yaml -CD
+# ansible-playbook -i hosts site.yaml
+#
 - hosts: all
   connection: local
   remote_user: "{{user}}"

@@ -3,6 +3,24 @@ cat unit.json | curl -X PUT --data-binary @- --unix-socket /var/run/unit/control
 ezid@uc3-ezidarks-stg01:17:13:00:~/install/arksorg-site/ansible$ pyenv prefix
 /ezid/.pyenv/versions/3.11.6
 
+
+
+----
+
+ezid@uc3-ezidarks-stg02:11:55:07:~/.pyenv/versions/3.11.0$ ln -s lib lib64
+ezid@uc3-ezidarks-stg02:11:55:13:~/.pyenv/versions/3.11.0$ cd -
+/ezid/install/arksorg-site/ansible
+ezid@uc3-ezidarks-stg02:11:55:18:~/install/arksorg-site/ansible$ ll /ezid/.pyenv/versions/3.11.0
+total 16
+drwxr-xr-x. 2 ezid ezid 4096 Oct 16 11:35 bin
+drwxr-xr-x. 3 ezid ezid 4096 Oct 16 11:21 include
+drwxr-xr-x. 4 ezid ezid 4096 Oct 16 11:21 lib
+lrwxrwxrwx. 1 ezid ezid    3 Oct 16 11:55 lib64 -> lib
+drwxr-xr-x. 3 ezid ezid 4096 Oct 16 11:21 share
+
+
+
+
 -------------------------------
 Fri Oct 13 06:05:44 PM PDT 2023
 

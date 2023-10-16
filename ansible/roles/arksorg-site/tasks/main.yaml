@@ -1,7 +1,19 @@
 ---
 
-# ansible-playbook -i hosts site.yaml -CD
-# ansible-playbook -i hosts site.yaml
+- name: Get python_home from pyenv prefix
+  command:
+    cmd: "pyenv prefix"
+  register: _response
+
+- name: Set python_home var
+  set_fact:
+    python_home: "{{ _response.stdout }}"
+
+- name: Symlink lib64 to lib in pyenv
+  file:
+    src: "{{ python_home }}/lib"
+    dest: "{{ python_home }}/lib64"
+    state: link
 
 - name: Clone arksorg repo
   git:
