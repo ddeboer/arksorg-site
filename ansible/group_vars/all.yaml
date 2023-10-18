@@ -5,5 +5,4 @@ deploy_dir: "{{ app_dir }}/arksorg"
 python_home: "{{ deploy_dir }}/venv/"
  
 arksorg_repo: 'https://github.com/CDLUC3/arksorg-site.git'
-#arksorg_version: 'main'
-arksorg_version: 'python3.11'
+arksorg_version: 'main'
