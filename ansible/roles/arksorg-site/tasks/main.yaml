@@ -1,19 +1,19 @@
 ---
 
-- name: Get python_home from pyenv prefix
-  command:
-    cmd: "pyenv prefix"
-  register: _response
-
-- name: Set python_home var
-  set_fact:
-    python_home: "{{ _response.stdout }}"
-
-- name: Symlink lib64 to lib in pyenv
-  file:
-    src: "{{ python_home }}/lib"
-    dest: "{{ python_home }}/lib64"
-    state: link
+#- name: Get python_home from pyenv prefix
+#  command:
+#    cmd: "pyenv prefix"
+#  register: _response
+#
+#- name: Set python_home var
+#  set_fact:
+#    python_home: "{{ _response.stdout }}"
+#
+#- name: Symlink lib64 to lib in pyenv
+#  file:
+#    src: "{{ python_home }}/lib"
+#    dest: "{{ python_home }}/lib64"
+#    state: link
 
 - name: Clone arksorg repo
   git:
@@ -39,10 +39,10 @@
 
 - name: Install resolver dependencies
   pip:
+    executable: /usr/bin/pip3.11
     chdir: "{{deploy_dir}}/resolver"
     requirements: requirements.txt
-    virtualenv: /ezid/arksorg/venv
-    virtualenv_command: python -m venv
+    state: present
 
 - ansible.builtin.debug:
     msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2') }}"
