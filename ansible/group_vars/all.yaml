@@ -6,4 +6,4 @@ deploy_dir: "{{ app_dir }}/arksorg"
 arksorg_repo: 'https://github.com/CDLUC3/arksorg-site.git'
 #arksorg_version: 'main'
 arksorg_version: 'python3.11'
-python_home: '/usr/lib64/python3.11/'
+python_home: '/usr/'
