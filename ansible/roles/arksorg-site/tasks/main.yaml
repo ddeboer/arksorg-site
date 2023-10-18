@@ -33,13 +33,11 @@
 
 - name: Install resolver dependencies
   pip:
-    #executable: /usr/bin/pip3.11
-    #extra_args: --user
+    state: present
     chdir: "{{deploy_dir}}/resolver"
     requirements: requirements.txt
-    state: present
     virtualenv: "{{deploy_dir}}/venv"
-    virtualenv_command: "python3.11 -m {{deploy_dir}}/venv"
+    virtualenv_command: "python3.11 -m venv"
 
 - name: Print unit.json contents
   ansible.builtin.debug:
