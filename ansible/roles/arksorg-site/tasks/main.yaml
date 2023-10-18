@@ -5,10 +5,10 @@
 #    cmd: "pyenv prefix"
 #  register: _response
 #
-- name: Set python_home var
-  set_fact:
-    python_home: "{{ _response.stdout }}"
-
+#- name: Set python_home var
+#  set_fact:
+#    python_home: "{{ _response.stdout }}"
+#
 #- name: Symlink lib64 to lib in pyenv
 #  file:
 #    src: "{{ python_home }}/lib"
