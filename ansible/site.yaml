@@ -1,6 +1,7 @@
 ---
 
 # Usage
+# export ANSIBLE_STDOUT_CALLBACK=debug
 # ansible-playbook -i hosts site.yaml -CD
 # ansible-playbook -i hosts site.yaml
 #

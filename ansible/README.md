@@ -4,6 +4,22 @@ ezid@uc3-ezidarks-stg01:17:13:00:~/install/arksorg-site/ansible$ pyenv prefix
 /ezid/.pyenv/versions/3.11.6
 
 
+-----
+how to get ansible to format output of unit.json.j2
+
+use env var 
+`export ANSIBLE_STDOUT_CALLBACK=debug`
+
+or create ~/.ansible.cfg:
+```
+[defaults]
+#stdout_callback = unixy
+stdout_callback = debug
+bin_ansible_callbacks = True
+```
+
+
+
 
 ----
 

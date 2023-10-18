@@ -33,14 +33,17 @@
 
 - name: Install resolver dependencies
   pip:
-    executable: /usr/bin/pip3.11
+    #executable: /usr/bin/pip3.11
+    #extra_args: --user
     chdir: "{{deploy_dir}}/resolver"
-    extra_args: --user
     requirements: requirements.txt
     state: present
+    virtualenv: "{{deploy_dir}}/venv"
+    virtualenv_command: "python3.11 -m {{deploy_dir}}/venv"
 
-- ansible.builtin.debug:
-    msg: "the value of unit.json is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2')| to_nice_json }}"
+- name: Print unit.json contents
+  ansible.builtin.debug:
+    msg: "{{ lookup('ansible.builtin.template', 'templates/unit.json.j2')| to_nice_json }}"
 
 - name: Configure nginx unit
   uri:
