@@ -8,8 +8,7 @@
     "rslv": {
       "type": "python 3.11",
       "working_directory": "{{ deploy_dir }}/resolver",
-      "path": "{{ deploy_dir }}/resolver",
-      "home": "/ezid/.pyenv/versions/3.11.6",
+      "path": ["{{ deploy_dir }}/resolver",],
       "home": "{{ python_home }}",
       "module": "rslv.app",
       "callable": "app"

@@ -5,10 +5,10 @@
 #    cmd: "pyenv prefix"
 #  register: _response
 #
-#- name: Set python_home var
-#  set_fact:
-#    python_home: "{{ _response.stdout }}"
-#
+- name: Set python_home var
+  set_fact:
+    python_home: "{{ _response.stdout }}"
+
 #- name: Symlink lib64 to lib in pyenv
 #  file:
 #    src: "{{ python_home }}/lib"
@@ -45,7 +45,7 @@
     state: present
 
 - ansible.builtin.debug:
-    msg: "the value of foo.txt is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2') }}"
+    msg: "the value of unit.json is {{ lookup('ansible.builtin.template', 'templates/unit.json.j2') }}"
 
 - name: Configure nginx unit
   uri:
