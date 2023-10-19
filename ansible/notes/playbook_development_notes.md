@@ -4,7 +4,7 @@ Notes on developing the deploy_arksorg_site playbook
 These are just rough notes collected during initial hair-pulling adventures while
 creating this ansible project.
 
-I followed [Dave's original deployment instructions](./original_manual_deployment_notes.md) to develop the playbook.
+I followed [Dave's original deployment instructions](./original_manual_deployment_notes.md) to develop the playbook.  These are not completely accurate.
 
 
 

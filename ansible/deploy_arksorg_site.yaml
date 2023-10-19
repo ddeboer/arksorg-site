@@ -3,8 +3,8 @@
 # Usage:
 #
 # export ANSIBLE_STDOUT_CALLBACK=debug
-# ansible-playbook -i hosts site.yaml -CD
-# ansible-playbook -i hosts site.yaml
+# ansible-playbook -i hosts deploy_arksorg_site.yaml -CD
+# ansible-playbook -i hosts deploy_arksorg_site.yaml
 
 
 - hosts: all

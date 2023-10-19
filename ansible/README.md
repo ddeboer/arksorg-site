@@ -1,111 +1,42 @@
-cat unit.json | curl -X PUT --data-binary @- --unix-socket /var/run/unit/control.sock http://localhost/config/
+Ansible Playbook `deploy_arksorg_site`
+=====================================
 
-ezid@uc3-ezidarks-stg01:17:13:00:~/install/arksorg-site/ansible$ pyenv prefix
-/ezid/.pyenv/versions/3.11.6
+works in consort with puppet module `uc3_ezid_arks`(url)
+
+designed to run on the local host, so puppet can run it
 
 
------
-how to get ansible to format output of unit.json.j2
+### Usage
 
-use env var 
-`export ANSIBLE_STDOUT_CALLBACK=debug`
-
-or create ~/.ansible.cfg:
-```
-[defaults]
-#stdout_callback = unixy
-stdout_callback = debug
-bin_ansible_callbacks = True
-```
+   export ANSIBLE_STDOUT_CALLBACK=debug
+   ansible-playbook -i hosts deploy_arksorg_site.yaml -CD
+   ansible-playbook -i hosts deploy_arksorg_site.yaml
 
 
 
+### Prereqs (deployed by puppet)
 
-----
+- installed nginx unit rpms:
+  - unit
+  - unit-devel
+  - unit-python311
 
-ezid@uc3-ezidarks-stg02:11:55:07:~/.pyenv/versions/3.11.0$ ln -s lib lib64
-ezid@uc3-ezidarks-stg02:11:55:13:~/.pyenv/versions/3.11.0$ cd -
-/ezid/install/arksorg-site/ansible
-ezid@uc3-ezidarks-stg02:11:55:18:~/install/arksorg-site/ansible$ ll /ezid/.pyenv/versions/3.11.0
-total 16
-drwxr-xr-x. 2 ezid ezid 4096 Oct 16 11:35 bin
-drwxr-xr-x. 3 ezid ezid 4096 Oct 16 11:21 include
-drwxr-xr-x. 4 ezid ezid 4096 Oct 16 11:21 lib
-lrwxrwxrwx. 1 ezid ezid    3 Oct 16 11:55 lib64 -> lib
-drwxr-xr-x. 3 ezid ezid 4096 Oct 16 11:21 share
+- python3.11 rpms from Amzn repo:
+  - python3.11
+  - python3.11-libs
+  - python3.11-setuptools
+  - python3.11-pip
+  - python3.11-tkinter
 
+- systemd dropin file for `unit.service`.  This provides:
+  - service runs as group `ezid`
+  - pid file group ownership as `ezid`
+  - log file group ownership as `ezid`
+  - unit service unix socket writable by `ezid`
 
+- ansible binaries installed local to ezid user using `pip3.11`.
 
-
--------------------------------
-Fri Oct 13 06:05:44 PM PDT 2023
-
-current errors:
-
-```
-2023/10/13 17:42:32 [info] 593206#593206 "rslv" application started
-Python path configuration:
-  PYTHONHOME = '/ezid/.pyenv/versions/3.11.6'
-  PYTHONPATH = (not set)
-  program name = 'python3'
-  isolated = 1
-  environment = 0
-  user site = 0
-  safe_path = 1
-  import site = 1
-  is in build tree = 0
-  stdlib dir = '/ezid/.pyenv/versions/3.11.6/lib64/python3.11'
-  sys._base_executable = '/usr/bin/python3'
-  sys.base_prefix = '/ezid/.pyenv/versions/3.11.6'
-  sys.base_exec_prefix = '/ezid/.pyenv/versions/3.11.6'
-  sys.platlibdir = 'lib64'
-  sys.executable = '/usr/bin/python3'
-  sys.prefix = '/ezid/.pyenv/versions/3.11.6'
-  sys.exec_prefix = '/ezid/.pyenv/versions/3.11.6'
-  sys.path = [
-    '/ezid/.pyenv/versions/3.11.6/lib64/python311.zip',
-    '/ezid/.pyenv/versions/3.11.6/lib64/python3.11',
-    '/ezid/.pyenv/versions/3.11.6/lib64/python3.11/lib-dynload',
-  ]
-2023/10/13 17:42:32 [alert] 593206#593206 Failed to initialise config
-```
-
-noticed my pyenv has not lib64:
-
-ezid@uc3-ezidarks-stg01:17:48:16:~/.pyenv/versions/3.11.6$ ll
-total 16
-drwxr-xr-x. 2 ezid ezid 4096 Oct 13 17:16 bin
-drwxr-xr-x. 3 ezid ezid 4096 Oct 13 11:54 include
-drwxr-xr-x. 4 ezid ezid 4096 Oct 13 11:54 lib
-drwxr-xr-x. 3 ezid ezid 4096 Oct 13 11:54 share
-ezid@uc3-ezidarks-stg01:17:48:17:~/.pyenv/versions/3.11.6$ ln -s lib lib64
-ezid@uc3-ezidarks-stg01:17:48:29:~/.pyenv/versions/3.11.6$ ll
-total 16
-drwxr-xr-x. 2 ezid ezid 4096 Oct 13 17:16 bin
-drwxr-xr-x. 3 ezid ezid 4096 Oct 13 11:54 include
-drwxr-xr-x. 4 ezid ezid 4096 Oct 13 11:54 lib
-lrwxrwxrwx. 1 ezid ezid    3 Oct 13 17:48 lib64 -> lib
-drwxr-xr-x. 3 ezid ezid 4096 Oct 13 11:54 share
+- ruby and bundler installed local to ezid user.  These are for building `arks.github.io` content.
 
 
-Now I'm back to:
-
-2023/10/13 17:48:51 [alert] 594594#594594 Python failed to import module "rslv.app"
-Traceback (most recent call last):
-  File "/ezid/arksorg/resolver/rslv/app.py", line 10, in <module>
-    import logging.config
-  File "/ezid/.pyenv/versions/3.11.6/lib64/python3.11/logging/config.py", line 30, in <module>
-    import logging.handlers
-  File "/ezid/.pyenv/versions/3.11.6/lib64/python3.11/logging/handlers.py", line 26, in <module>
-    import io, logging, socket, os, pickle, struct, time, re
-  File "/ezid/.pyenv/versions/3.11.6/lib64/python3.11/socket.py", line 54, in <module>
-    import os, sys, io, selectors
-  File "/ezid/.pyenv/versions/3.11.6/lib64/python3.11/selectors.py", line 11, in <module>
-    import math
-ImportError: /ezid/.pyenv/versions/3.11.6/lib64/python3.11/lib-dynload/math.cpython-311-x86_64-linux-gnu.so: undefined symbol: _PyModule_Add
-
-
-The few refs on google suggest python version issues. poetry clashing with 3.11.5
-
-https://github.com/python-poetry/poetry/issues/8452
 
