@@ -4,9 +4,51 @@
 # export ANSIBLE_STDOUT_CALLBACK=debug
 # ansible-playbook -i hosts site.yaml -CD
 # ansible-playbook -i hosts site.yaml
-#
+
+
 - hosts: all
   connection: local
   remote_user: "{{user}}"
-  roles:
-  - arksorg-site
+  #roles:
+  #- arksorg-site
+
+  tasks:
+
+  - name: Clone arksorg repo
+    git:
+      repo: "{{ arksorg_repo }}"
+      dest: "{{ deploy_dir }}"
+      version: "{{ arksorg_version }}"
+      force: yes
+  
+  - name: Install gems from arks.github.io Gemfile
+    community.general.bundler:
+      chdir: "{{deploy_dir}}/arks.github.io"
+  
+  - name: Run bundle exec jekyll to build arks.github.io site
+    command:
+      chdir: "{{deploy_dir}}/arks.github.io"
+      cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
+  
+  - name: Install resolver dependencies
+    pip:
+      state: present
+      chdir: "{{deploy_dir}}/resolver"
+      requirements: requirements.txt
+      virtualenv: "{{deploy_dir}}/venv"
+      virtualenv_command: "python3.11 -m venv"
+  
+  - name: Print unit.json contents
+    ansible.builtin.debug:
+      msg: "{{ lookup('ansible.builtin.template', 'templates/unit.json.j2')| to_nice_json }}"
+  
+  - name: Configure nginx unit
+    uri:
+      url: http://localhost/config/
+      unix_socket: /var/run/unit/control.sock
+      method: PUT
+      body_format: json
+      body: "{{ lookup('ansible.builtin.template','templates/unit.json.j2') }}"
+
+
+
