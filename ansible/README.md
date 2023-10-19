@@ -1,22 +1,41 @@
 Ansible Playbook `deploy_arksorg_site`
 =====================================
 
-works in consort with puppet module `uc3_ezid_arks`(url)
+The `deploy_arksorg_site.yaml` ansible playbook works in consort with the
+UC3 puppet module [`uc3_ezid_arks`](https://github.com/CDLUC3/uc3-ops-puppet-modules)
+to perform end-to-end deployment of the arksorg-site service on AWS EC2 hosts.
 
-designed to run on the local host, so puppet can run it
+
+### What it Does
+
+- Clone arksorg-site repository into deployment directory `/ezid/arksorg`
+- Install ruby gems from arks.github.io Gemfile
+- Run `bundle exec jekyll` to build arks.github.io site
+- Install python dependencies for `resolver` app into virtual environment at `/ezid/arksorg/venv`.
+- Print unit.json contents
+- Post resolver app `unit.josn` into nginx-unit config api.
 
 
 ### Usage
 
+Execute this playbook on the localhost as user `ezid`:
+
+   cd ~/install/arksorg-site
    export ANSIBLE_STDOUT_CALLBACK=debug
    ansible-playbook -i hosts deploy_arksorg_site.yaml -CD
    ansible-playbook -i hosts deploy_arksorg_site.yaml
 
+By default the playbook clones the `main` branch of the `arksorg-site`
+repository into the deployment directory.  To Deploy a specific version of the
+arksorg application, supply the version number (git tag) on the command line as
+variable `arksorg_version`:
+
+   ansible-playbook -i hosts deploy_arksorg_site.yaml -e arksorg_version=0.0.2
 
 
 ### Prereqs (deployed by puppet)
 
-- installed nginx unit rpms:
+- nginx unit rpms:
   - unit
   - unit-devel
   - unit-python311
@@ -37,6 +56,4 @@ designed to run on the local host, so puppet can run it
 - ansible binaries installed local to ezid user using `pip3.11`.
 
 - ruby and bundler installed local to ezid user.  These are for building `arks.github.io` content.
-
-
 
