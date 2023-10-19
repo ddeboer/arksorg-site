@@ -1,6 +1,7 @@
 ---
 
-# Usage
+# Usage:
+#
 # export ANSIBLE_STDOUT_CALLBACK=debug
 # ansible-playbook -i hosts site.yaml -CD
 # ansible-playbook -i hosts site.yaml
@@ -9,13 +10,10 @@
 - hosts: all
   connection: local
   remote_user: "{{user}}"
-  #roles:
-  #- arksorg-site
-
   tasks:
 
   - name: Clone arksorg repo
-    git:
+    ansible.builtin.git:
       repo: "{{ arksorg_repo }}"
       dest: "{{ deploy_dir }}"
       version: "{{ arksorg_version }}"
@@ -26,12 +24,12 @@
       chdir: "{{deploy_dir}}/arks.github.io"
   
   - name: Run bundle exec jekyll to build arks.github.io site
-    command:
+    ansible.builtin.command:
       chdir: "{{deploy_dir}}/arks.github.io"
       cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
   
   - name: Install resolver dependencies
-    pip:
+    ansible.builtin.pip:
       state: present
       chdir: "{{deploy_dir}}/resolver"
       requirements: requirements.txt
@@ -43,7 +41,7 @@
       msg: "{{ lookup('ansible.builtin.template', 'templates/unit.json.j2')| to_nice_json }}"
   
   - name: Configure nginx unit
-    uri:
+    ansible.builtin.uri:
       url: http://localhost/config/
       unix_socket: /var/run/unit/control.sock
       method: PUT
