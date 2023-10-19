@@ -1,4 +1,4 @@
-# Installation on AWS EC2
+# Manual Installation on AWS EC2
 
 Provides a deployment of arks.org on AWS EC2 instance listening on HTTP port 18880.
 

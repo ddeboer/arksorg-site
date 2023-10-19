@@ -29,8 +29,9 @@ By default the playbook clones the `main` branch of the `arksorg-site`
 repository into the deployment directory.  To Deploy a specific version of the
 arksorg application, supply the version number (git tag) on the command line as
 variable `arksorg_version`:
-
-   ansible-playbook -i hosts deploy_arksorg_site.yaml -e arksorg_version=0.0.2
+```
+ansible-playbook -i hosts deploy_arksorg_site.yaml -e arksorg_version=0.0.2
+```
 
 
 ### Prereqs (deployed by puppet)
