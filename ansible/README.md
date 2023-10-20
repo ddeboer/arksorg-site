@@ -58,3 +58,12 @@ ansible-playbook -i hosts deploy_arksorg_site.yaml -e arksorg_version=0.0.2
 
 - ruby and bundler installed local to ezid user.  These are for building `arks.github.io` content.
 
+
+### Debugging
+
+To retrieve the current unit config object, run this curl as user `ezid`:
+```
+curl --unix-socket /var/run/unit/control.sock http://localhost/config
+```
+
+
