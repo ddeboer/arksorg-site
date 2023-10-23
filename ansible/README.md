@@ -66,4 +66,7 @@ To retrieve the current unit config object, run this curl as user `ezid`:
 curl --unix-socket /var/run/unit/control.sock http://localhost/config
 ```
 
-
+To check the status of the Nginx Unit service:
+```
+sudo cdlsysctl status unit
+```
