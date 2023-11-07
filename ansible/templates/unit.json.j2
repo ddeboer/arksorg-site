@@ -11,7 +11,10 @@
       "path": ["{{ deploy_dir }}/resolver",],
       "home": "{{ python_home }}",
       "module": "rslv.app",
-      "callable": "app"
+      "callable": "app",
+      "environment": {
+        "RSLV_DB_CONNECTION_STRING":"sqlite:////apps/ezid/var/data/pid_config.sqlite"
+      }
     }
   },
   "routes": {
