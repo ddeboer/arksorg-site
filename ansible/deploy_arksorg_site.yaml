@@ -59,11 +59,11 @@
   - name: Initialize resolver application
     ansible.builtin.script:
       chdir: "{{deploy_dir}}"
-      cmd: "scripts/run_command.sh scripts/naan_manage.py init Initialized $(date)"
+      cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py init Initialized $(date)"
       creates: "{{config_dir}}pid_config.sqlite"
 
   - name: Configure resolver application
     ansible.builtin.script:
       chdir: "{{deploy_dir}}"
-      cmd: "scripts/run_command.sh scripts/naan_manage.py naans"
+      cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py naans"
 

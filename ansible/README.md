@@ -21,6 +21,7 @@ Execute this playbook on the localhost as user `ezid`:
 ```
 cd ~/install/arksorg-site
 export ANSIBLE_STDOUT_CALLBACK=debug
+
 ansible-playbook -i hosts deploy_arksorg_site.yaml -CD
 ansible-playbook -i hosts deploy_arksorg_site.yaml
 ```

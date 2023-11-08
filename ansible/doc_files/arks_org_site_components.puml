@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+
+Container(rslv, "Resolver", "ARKs.org resolver service")
+Container(docs, "Pages", "ARKs.org web site")
+Container(nginx, "Nginx", "Web Server")
+ContainerDb(config, "Configuration", "NAAN metadata")
+System_Ext(naans_priv, "Private NAAN Registry", "Source of truth for NAAN records")
+System_Ext(naans, "NAAN Registry", "Public NAAN records")
+System_Ext(ghdocs, "Pages Source", "Page markdown and artifact sources maintained in GitHub")
+System_Ext(ezid, "EZID", "EZID targets differ from NAAN registry")
+Person(user, "User", "Using ARK identifiers")
+
+Rel(naans_priv, naans, "NAAN Records", "Action triggered on push to private repo main branch")
+Rel(naans, config, "NAAN records", "Webhook called on tag of main branch")
+Rel(ezid, config, "Shoulder List", "Manual step to transfer list generated with ")
+Rel(rslv, nginx, "Serve")
+Rel(docs, nginx, "Serve")
+Rel(config, rslv, "Config")
+Rel(ghdocs, docs, "Build")
+Rel_R(user, nginx, "Resolve, Inflect")
+@enduml
