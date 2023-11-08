@@ -68,6 +68,15 @@ LOG_LEVELS = {
 def get_logger():
     return logging.getLogger("naan_manage")
 
+def create_configuration_folder():
+    L = get_logger()
+    dbstr = rslv.config.settings.db_connection_string
+    data_path = dbstr[len("sqlite:///"):]
+    data_folder = os.path.dirname(data_path)
+    L.info("Using data path: %s", data_folder)
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder, exist_ok=True)
+        L.info("Created data folder: %s", data_folder)
 
 def load_ezid_shoulder_list(url:str) -> typing.List[dict]:
     # regexp to match entries in the shoulder-list output
@@ -119,6 +128,18 @@ def main(ctx, verbosity):
         rslv.config.settings.db_connection_string, pool_pre_ping=True
     )
     return 0
+
+@main.command("init")
+@click.pass_context
+@click.argument("description")
+def intialize(ctx, description):
+    """
+    Initialize the data store
+    """
+    L = get_logger()
+    create_configuration_folder()
+    rslv.lib_rslv.piddefine.create_database(ctx.obj["engine"], description)
+    L.info("Data store initialized at: %s", rslv.config.settings.db_connection_string)
 
 
 @main.command("naans")
@@ -228,6 +249,7 @@ def load_public_naans(ctx, url, ezid_naans_url):
                 L.info("Updated entry %s with %s changes", res["uniq"], res["n_changes"])
             else:
                 L.info("Existing entry %s no changes.", res["uniq"])
+            print(f"Entry: {res['uniq']}")
         definitions.refresh_metadata()
     finally:
         session.close()
