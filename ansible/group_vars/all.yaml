@@ -3,6 +3,7 @@ group: "{{ user }}"
 app_dir: "{{ lookup('env', 'HOME') | default('ezid') }}"
 deploy_dir: "{{ app_dir }}/arksorg"
 python_home: "{{ deploy_dir }}/venv/"
+config_dir: "{{ app_dir }}/var/data/"
  
 arksorg_repo: 'https://github.com/CDLUC3/arksorg-site.git'
 arksorg_version: 'main'
