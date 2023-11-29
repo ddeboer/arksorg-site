@@ -248,8 +248,7 @@ def load_public_naans(ctx, url, ezid_naans_url):
             elif res["n_changes"] > 0:
                 L.info("Updated entry %s with %s changes", res["uniq"], res["n_changes"])
             else:
-                L.info("Existing entry %s no changes.", res["uniq"])
-            print(f"Entry: {res['uniq']}")
+                L.debug("Existing entry %s no changes.", res["uniq"])
         definitions.refresh_metadata()
     finally:
         session.close()
