@@ -1,3 +1,5 @@
+.envrc
+
 # Byte-compiled / optimized / DLL files
 site/
 __pycache__/
