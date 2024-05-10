@@ -1,0 +1,16 @@
+# /etc/systemd/system/jekyll-watch.service
+[Unit]
+Description=Run jekyll in watch mode to automatically update content
+Documentation=https://github.com/CDLUC3/arksorg-site
+After=remote-fs.target network.target
+
+[Service]
+User={{ user }}
+WorkingDirectory="{{ deploy_dir}}/arks.github.io"
+
+ExecStart=/usr/bin/bundle exec jekyll build --config _config.yml,../_config.local.yml --watch
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
