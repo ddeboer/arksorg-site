@@ -1,0 +1,40 @@
+---
+#
+# playbooks/run_jekyll_update.yaml
+#
+# Checks arks.github.io repo for updates.  If so, runs jekyll build
+#
+# Usage:
+#
+#   export ANSIBLE_STDOUT_CALLBACK=debug
+#   ansible-playbook -i hosts playbooks/run_jekyll_update.yaml -CD
+#   ansible-playbook -i hosts playbooks/run_jekyll_update.yaml
+
+
+- hosts: all
+  connection: local
+  remote_user: "{{user}}"
+  tasks:
+
+  - name: "Run git pull on arks.github.io repo"
+    ansible.builtin.git:
+      repo: "{{ arks_io_repo }}"
+      dest: "{{ deploy_dir}}/arks.github.io"
+      clone: false
+      version: "{{ arks_io_version }}"
+      force: true
+    register: git_response
+
+  - name: "Test if local working tree is at a new commit id"
+    ansible.builtin.set_fact:
+      working_tree_updated: "{{ git_response.before != git_response.after }}"
+
+  #- debug:
+  #    msg: "working_tree_updated: {{ working_tree_updated }}"
+
+  - name: "Run bundle exec jekyll to build arks.github.io site"
+    ansible.builtin.command:
+      chdir: "{{deploy_dir}}/arks.github.io"
+      cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
+    when: working_tree_updated
+
