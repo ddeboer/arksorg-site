@@ -37,9 +37,9 @@
       group: root
       mode: '0644'
   
-  - name: enable jekyll_watch.service unit file
+  - name: enable jekyll-watch.service unit file
     ansible.builtin.systemd_service:
-      name: jekyll_watch.service
+      name: jekyll-watch.service
       enabled: true
       #state: started
 
