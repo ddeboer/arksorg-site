@@ -1,6 +1,3 @@
-[submodule "arks.github.io"]
-	path = arks.github.io
-	url = https://github.com/arks-org/arks.github.io.git
 [submodule "resolver"]
 	path = resolver
 	url = https://github.com/CDLUC3/resolver.git
