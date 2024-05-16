@@ -70,8 +70,7 @@ def get_logger():
 
 def create_configuration_folder():
     L = get_logger()
-    settings = rslv.config.load_settings()
-    dbstr = settings.db_connection_string
+    dbstr = rslv.config.settings.db_connection_string
     data_path = dbstr[len("sqlite:///"):]
     data_folder = os.path.dirname(data_path)
     L.info("Using data path: %s", data_folder)
@@ -124,10 +123,9 @@ def main(ctx, verbosity):
     logging_config["loggers"][""]["level"] = verbosity
     logging.config.dictConfig(logging_config)
     L = get_logger()
-    settings = rslv.config.load_settings()
     ctx.ensure_object(dict)
     ctx.obj["engine"] = sqlalchemy.create_engine(
-        settings.db_connection_string, pool_pre_ping=True
+        rslv.config.settings.db_connection_string, pool_pre_ping=True
     )
     return 0
 
@@ -139,26 +137,9 @@ def intialize(ctx, description):
     Initialize the data store
     """
     L = get_logger()
-    settings = rslv.config.load_settings()
     create_configuration_folder()
     rslv.lib_rslv.piddefine.create_database(ctx.obj["engine"], description)
-    L.info("Data store initialized at: %s", settings.db_connection_string)
-
-
-@main.command("ezidshoulders")
-@click.pass_context
-@click.option(
-    "-z",
-    "--ezid-naans-url",
-    help="URL from which to retrieve the EZID shoulder-list text",
-    default=EZID_SHOULDERS_URL
-)
-def get_ezid_shoulders(ctx, ezid_naans_url):
-    L = get_logger()
-    data = load_ezid_shoulder_list(ezid_naans_url)
-    if len(data) < 1:
-        L.warning("No EZID NAAN list available from url: %s", ezid_naans_url)
-    print(json.dumps(data, indent=2))
+    L.info("Data store initialized at: %s", rslv.config.settings.db_connection_string)
 
 
 @main.command("naans")
@@ -272,98 +253,6 @@ def load_public_naans(ctx, url, ezid_naans_url):
     finally:
         session.close()
 
-
-@main.command("load")
-@click.pass_context
-@click.option(
-    "-u",
-    "--url",
-    help="URL from which to retrieve public NAAN registry JSON.",
-    default="https://cdluc3.github.io/naan_reg_public/naan_records.json",
-)
-def load_targets(ctx, url):
-    L = get_logger()
-    session = rslv.lib_rslv.piddefine.get_session(ctx.obj["engine"])
-    try:
-        definitions = rslv.lib_rslv.piddefine.PidDefinitionCatalog(session)
-        L.debug("Loading NAAN JSON from: %s", url)
-        data = None
-        if os.path.exists(url):
-            L.debug("Loading local file data from: %s", url)
-            with open(url, "r") as inf:
-                data = json.load(inf)
-        else:
-            response = httpx.get(url)
-            if response.status_code != 200:
-                L.error("Download failed. Response status code: %s", response.status_code)
-                return
-            try:
-                data = response.json()
-            except Exception as e:
-                L.exception(e)
-                return
-        canonical = "ark:/{prefix}/{value}"
-        try:
-            # Add a base ark: scheme definition.
-            entry = rslv.lib_rslv.piddefine.PidDefinition(
-                scheme="ark",
-                target="/.info/{pid}",
-                canonical=canonical,
-                synonym_for=None,
-                properties={
-                    "what": "ark",
-                    "name": "Archival Resource Key",
-                },
-            )
-            res = definitions.add_or_update(entry)
-            if res["n_changes"] < 0:
-                L.info("Added entry %s", res["uniq"])
-            elif res["n_changes"] > 0:
-                L.info("Updated entry %s with %s changes", res["uniq"], res["n_changes"])
-            else:
-                L.info("Existing entry %s no changes.", res["uniq"])
-        except Exception as e:
-            L.warning(e)
-            pass
-        for naan, record in data.items():
-            naan = str(naan)
-            L.debug("Loading %s", naan)
-            properties = record
-            target = record.get("target", None)
-            if target is None:
-                target = {
-                    "url":"/.info/{pid}",
-                    "http_code": 302,
-                }
-            else:
-                L.debug("NAAN: %s", naan)
-                target["url"] = target["url"].replace("$arkpid", "ark:/{prefix}/{value}")
-            prefix = naan
-            value = None
-            if record.get("rtype", None) == "shoulder":
-                prefix = record["naan"]
-                value = record["shoulder"]
-            entry = rslv.lib_rslv.piddefine.PidDefinition(
-                scheme="ark",
-                prefix=prefix,
-                value=value,
-                target=target["url"],
-                http_code=target["http_code"],
-                properties=properties,
-                canonical=canonical,
-                synonym_for=None,
-            )
-            L.debug("Saving entry for NAAN: %s", naan)
-            res = definitions.add_or_update(entry)
-            if res["n_changes"] < 0:
-                L.info("Added entry %s", res["uniq"])
-            elif res["n_changes"] > 0:
-                L.info("Updated entry %s with %s changes", res["uniq"], res["n_changes"])
-            else:
-                L.debug("Existing entry %s no changes.", res["uniq"])
-        definitions.refresh_metadata()
-    finally:
-        session.close()
 
 if __name__ == "__main__":
     sys.exit(main())
