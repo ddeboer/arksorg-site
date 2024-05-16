@@ -18,6 +18,13 @@
       dest: "{{ deploy_dir }}"
       version: "{{ arksorg_version }}"
       force: yes
+
+  - name: Clone arks.github.io repo
+    ansible.builtin.git:
+      repo: "{{ arksghio_repo }}"
+      dest: "{{ deploy_dir }}/arks.github.io"
+      version: "{{ arksghio_version }}"
+      force: yes
   
   - name: Install gems from arks.github.io Gemfile
     community.general.bundler:
