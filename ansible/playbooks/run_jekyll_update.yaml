@@ -18,10 +18,10 @@
 
   - name: "Run git pull on arks.github.io repo"
     ansible.builtin.git:
-      repo: "{{ arks_io_repo }}"
+      repo: "{{ arksghio_repo }}"
       dest: "{{ deploy_dir}}/arks.github.io"
       clone: false
-      version: "{{ arks_io_version }}"
+      version: "{{ arksghio_version }}"
       force: true
     register: git_response
 
