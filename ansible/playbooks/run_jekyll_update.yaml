@@ -29,8 +29,10 @@
     ansible.builtin.set_fact:
       working_tree_updated: "{{ git_response.before != git_response.after }}"
 
-  #- debug:
-  #    msg: "working_tree_updated: {{ working_tree_updated }}"
+  - debug:
+      msg: "git_response: {{ git_response }}"
+  - debug:
+      msg: "working_tree_updated: {{ working_tree_updated }}"
   
   - name: "Install gems from arks.github.io Gemfile"
     community.general.bundler:
