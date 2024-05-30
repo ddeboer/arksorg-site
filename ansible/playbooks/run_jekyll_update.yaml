@@ -29,15 +29,10 @@
     ansible.builtin.set_fact:
       working_tree_updated: "{{ git_response.before != git_response.after }}"
 
-  - debug:
-      msg: "git_response: {{ git_response }}"
-  - debug:
-      msg: "working_tree_updated: {{ working_tree_updated }}"
-  
-  - name: "Install gems from arks.github.io Gemfile"
-    community.general.bundler:
-      chdir: "{{deploy_dir}}/arks.github.io"
-    when: working_tree_updated
+  #- debug:
+  #    msg: "git_response: {{ git_response }}"
+  #- debug:
+  #    msg: "working_tree_updated: {{ working_tree_updated }}"
 
   - name: "Run bundle exec jekyll to build arks.github.io site"
     ansible.builtin.command:
