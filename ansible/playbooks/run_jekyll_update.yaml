@@ -37,6 +37,7 @@
   - name: "Install gems from arks.github.io Gemfile"
     community.general.bundler:
       chdir: "{{deploy_dir}}/arks.github.io"
+    when: working_tree_updated
 
   - name: "Run bundle exec jekyll to build arks.github.io site"
     ansible.builtin.command:
