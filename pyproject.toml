@@ -21,7 +21,7 @@ aiosqlite = "^0.20.0"
 
 
 [tool.poetry.scripts]
-n2t = 'arks.__main__:main'
+arks = 'arks.__main__:main'
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7"
