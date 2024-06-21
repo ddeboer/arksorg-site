@@ -75,7 +75,7 @@ def records_to_db(
     repository = rslv.lib_rslv.piddefine.PidDefinitionCatalog(session)
     # check to see if the list of records is more recent than the repository
     meta = repository.get_metadata()
-    records_modified_date = datetime.datetime.fromisoformat(records["metadata"]["modified_date"])
+    records_modified_date = datetime.datetime.fromisoformat(records["metadata"]["updated"])
     _total = 0
     _added = 0
     _updated = 0
@@ -90,10 +90,46 @@ def records_to_db(
     # Template pattern for a canonical ark representation
     # TODO: deal with the slash
     _canonical = "ark:/${prefix}/${value}"
+
+    try:
+        # Add a base ark: scheme definition.
+        entry = rslv.lib_rslv.piddefine.PidDefinition(
+            scheme="ark",
+            target="/.info/{pid}",
+            canonical=_canonical,
+            synonym_for=None,
+            properties={
+                "what": "ark",
+                "name": "Archival Resource Key",
+            },
+        )
+        res = repository.add_or_update(entry)
+        if res["n_changes"] < 0:
+            L.info("Added entry %s", res["uniq"])
+        elif res["n_changes"] > 0:
+            L.info("Updated entry %s with %s changes", res["uniq"], res["n_changes"])
+        else:
+            L.info("Existing entry %s no changes.", res["uniq"])
+    except Exception as e:
+        L.warning(e)
+        pass
+
+    record_type_names = [
+        "PublicNAAN",
+        "PublicNAANShoulder",
+    ]
+
     for record in records["data"]:
         entry = None
-        if record.get("rtype") == "naan":
+        if record.get("rtype") in record_type_names:
             _prefix = record.get("what")
+            _value = None
+            if record['rtype'] == 'PublicNAANShoulder':
+                _prefix = record.get("naan", None)
+                _value = record.get("shoulder", None)
+            if _value is None and _prefix is None:
+                L.warning("Entry %s is has null prefix and value.", record["what"])
+                continue
             _target = record.get("target", {}).get("url")
             if _target is None:
                 _target = f"/.info/{_scheme}/{_prefix}"
@@ -102,7 +138,7 @@ def records_to_db(
             entry = rslv.lib_rslv.piddefine.PidDefinition(
                 scheme=_scheme,
                 prefix=_prefix,
-                value=None,
+                value=_value,
                 target=_target,
                 http_code = record.get("target", {}).get("http_code", 302),
                 canonical=_canonical,
@@ -217,11 +253,13 @@ def get_info(config: appconfig.Settings) -> int:
 
 @cli.command("load-naans")
 @click.pass_obj
-@click.option("-s", "--source", default="naan_records.json", help="Source JSON NAANs file or url")
+@click.option("-s", "--source", default=None, help="Source JSON NAANs file or url")
 def load_naans(config:appconfig.Settings, source:str) -> int:
     L = get_logger()
     L.info("Loading NAAN records from %s", source)
     records = []
+    if source is None:
+        source = config.naans_source
     if os.path.exists(source):
         with open(source, "r") as f:
             records = json.load(f)

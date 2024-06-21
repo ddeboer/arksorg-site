@@ -34,22 +34,31 @@
     ansible.builtin.command:
       chdir: "{{deploy_dir}}/arks.github.io"
       cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
-  
-  - name: Install resolver dependencies
-    ansible.builtin.pip:
-      state: present
-      chdir: "{{deploy_dir}}/resolver"
-      requirements: requirements.txt
-      virtualenv: "{{deploy_dir}}/venv"
-      virtualenv_command: "python3.11 -m venv"
 
-  - name: Install resolver application
+  - name: Install arks application
     ansible.builtin.pip:
       state: present
-      chdir: "{{deploy_dir}}/resolver"
+      chdir: "{{deploy_dir}}"
       virtualenv: "{{deploy_dir}}/venv"
       virtualenv_command: "python3.11 -m venv"
       name: .
+      editable: true
+
+  #- name: Install resolver dependencies
+  #  ansible.builtin.pip:
+  #    state: present
+  #    chdir: "{{deploy_dir}}/resolver"
+  #    requirements: requirements.txt
+  #    virtualenv: "{{deploy_dir}}/venv"
+  #    virtualenv_command: "python3.11 -m venv"
+
+  #- name: Install resolver application
+  #  ansible.builtin.pip:
+  #    state: present
+  #    chdir: "{{deploy_dir}}/resolver"
+  #    virtualenv: "{{deploy_dir}}/venv"
+  #    virtualenv_command: "python3.11 -m venv"
+  #    name: .
 
   - name: Print unit.json contents
     ansible.builtin.debug:
@@ -63,14 +72,14 @@
       body_format: json
       body: "{{ lookup('ansible.builtin.template','templates/unit.json.j2') }}"
 
-  - name: Initialize resolver application
-    ansible.builtin.script:
-      chdir: "{{deploy_dir}}"
-      cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py init Initialized"
-      creates: "{{config_dir}}pid_config.sqlite"
+  #- name: Initialize resolver application
+  #  ansible.builtin.script:
+  #    chdir: "{{deploy_dir}}"
+  #    cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py init Initialized"
+  #    creates: "{{config_dir}}pid_config.sqlite"
 
-  - name: Configure resolver application
-    ansible.builtin.script:
-      chdir: "{{deploy_dir}}"
-      cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py naans"
+  #- name: Configure resolver application
+  #  ansible.builtin.script:
+  #    chdir: "{{deploy_dir}}"
+  #    cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py naans"
 

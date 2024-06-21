@@ -7,13 +7,13 @@
   "applications": {
     "rslv": {
       "type": "python 3.11",
-      "working_directory": "{{ deploy_dir }}/resolver",
-      "path": ["{{ deploy_dir }}/resolver",],
+      "working_directory": "{{ deploy_dir }}",
+      "path": ["{{ deploy_dir }}/arks"],
       "home": "{{ python_home }}",
-      "module": "rslv.app",
+      "module": "arks.app",
       "callable": "app",
       "environment": {
-        "RSLV_DB_CONNECTION_STRING":"sqlite:////apps/ezid/var/data/pid_config.sqlite"
+        "ARKS_DB_CONNECTION_STRING":"sqlite:////apps/ezid/var/data/pid_config.sqlite"
       }
     }
   },

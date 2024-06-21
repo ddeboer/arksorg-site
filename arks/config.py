@@ -24,12 +24,12 @@ class Settings(pydantic_settings.BaseSettings):
     # An sqlalchemy database connection string for the registry configuration
     db_connection_string: str = f"sqlite:///{BASE_FOLDER}/data/registry.sqlite"
     # Label for the type of environment we are running under, e.g. "development", "production"
-    environment: str = "development"
+    environment: str = "production"
     # Allow application information to be exposed in the api
-    allow_appinfo: bool = True
+    allow_appinfo: bool = False
     # Path to logfile, fall back to stderr if None
     log_filename: typing.Optional[str] = None
-    log_level: str = "debug"
+    log_level: str = "info"
     log_format: str = logging.BASIC_FORMAT
     # Log sql queries
     debug_sql: bool = False
@@ -37,6 +37,8 @@ class Settings(pydantic_settings.BaseSettings):
     static_dir: str = os.path.join(BASE_FOLDER, "static")
     # Templates used by this application
     template_dir: str = os.path.join(BASE_FOLDER, "templates")
+    # The public naan and shoulder source URL
+    naans_source: str = "https://cdluc3.github.io/naan_reg_public/naan_records.json"
 
 
 @functools.lru_cache
