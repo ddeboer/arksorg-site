@@ -72,6 +72,11 @@
       body_format: json
       body: "{{ lookup('ansible.builtin.template','templates/unit.json.j2') }}"
 
+  - name: Configure resolver application
+    ansible.builtin.script:
+      chdir: "{{deploy_dir}}"
+      cmd: "{{deploy_dir}}/scripts/run_command.sh -m arks -c cdl-config.env load-naans"
+
   #- name: Initialize resolver application
   #  ansible.builtin.script:
   #    chdir: "{{deploy_dir}}"
