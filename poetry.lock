@@ -841,7 +841,7 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rslv"
-version = "0.5.2"
+version = "0.5.3"
 description = "Provides an identifier resolver service in FastAPI."
 optional = false
 python-versions = "^3.9"
@@ -858,7 +858,7 @@ sqlalchemy = "^2"
 type = "git"
 url = "https://github.com/CDLUC3/resolver.git"
 reference = "main"
-resolved_reference = "e05f009ec384b2b9d7ae6770de377591c8a03c11"
+resolved_reference = "833ebb2e35b3cbe9df8f167bf485c6e26186f4b0"
 
 [[package]]
 name = "shellingham"

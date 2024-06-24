@@ -95,7 +95,7 @@ def records_to_db(
         # Add a base ark: scheme definition.
         entry = rslv.lib_rslv.piddefine.PidDefinition(
             scheme="ark",
-            target="/.info/{pid}",
+            target="/.info/${pid}",
             canonical=_canonical,
             synonym_for=None,
             properties={
@@ -134,13 +134,14 @@ def records_to_db(
             if _target is None:
                 _target = f"/.info/{_scheme}/{_prefix}"
             _properties = record
+            _http_code = record.get("target", {}).get("http_code", 302)
             _properties["target"] = {"DEFAULT": record.get("target")}
             entry = rslv.lib_rslv.piddefine.PidDefinition(
                 scheme=_scheme,
                 prefix=_prefix,
                 value=_value,
                 target=_target,
-                http_code = record.get("target", {}).get("http_code", 302),
+                http_code = _http_code,
                 canonical=_canonical,
                 synonym_for=None,
                 properties=_properties,

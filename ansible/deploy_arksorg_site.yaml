@@ -44,22 +44,6 @@
       name: .
       editable: true
 
-  #- name: Install resolver dependencies
-  #  ansible.builtin.pip:
-  #    state: present
-  #    chdir: "{{deploy_dir}}/resolver"
-  #    requirements: requirements.txt
-  #    virtualenv: "{{deploy_dir}}/venv"
-  #    virtualenv_command: "python3.11 -m venv"
-
-  #- name: Install resolver application
-  #  ansible.builtin.pip:
-  #    state: present
-  #    chdir: "{{deploy_dir}}/resolver"
-  #    virtualenv: "{{deploy_dir}}/venv"
-  #    virtualenv_command: "python3.11 -m venv"
-  #    name: .
-
   - name: Print unit.json contents
     ansible.builtin.debug:
       msg: "{{ lookup('ansible.builtin.template', 'templates/unit.json.j2')| to_nice_json }}"
@@ -77,14 +61,4 @@
       chdir: "{{deploy_dir}}"
       cmd: "{{deploy_dir}}/scripts/run_command.sh -m arks -c cdl-config.env load-naans"
 
-  #- name: Initialize resolver application
-  #  ansible.builtin.script:
-  #    chdir: "{{deploy_dir}}"
-  #    cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py init Initialized"
-  #    creates: "{{config_dir}}pid_config.sqlite"
-
-  #- name: Configure resolver application
-  #  ansible.builtin.script:
-  #    chdir: "{{deploy_dir}}"
-  #    cmd: "{{deploy_dir}}/scripts/run_command.sh {{deploy_dir}}/scripts/naan_manage.py naans"
 
