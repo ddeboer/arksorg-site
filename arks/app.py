@@ -9,12 +9,24 @@ import fastapi.templating
 import sqlalchemy.orm
 import rslv.routers.resolver
 
-from .config import get_settings
+from arks.config import get_settings
 from arks import __version__, APP_NAME
 
 
 def get_logger():
     return logging.getLogger(APP_NAME)
+
+
+def setup_logger(app: fastapi.FastAPI) -> None:
+    _levels = {
+        "DEBUG": logging.DEBUG,
+        "ERROR": logging.ERROR,
+        "WARNING": logging.WARNING,
+        "INFO": logging.INFO,
+        "CRITICAL": logging.CRITICAL
+    }
+    level_str = app.state.settings.log_level.upper()
+    logging.basicConfig(level=_levels[level_str])
 
 
 @functools.lru_cache(maxsize=None)
@@ -35,8 +47,19 @@ def get_dbsession(dbengine) -> typing.Iterator[sqlalchemy.orm.Session]:
         dbsession.close()
 
 
+async def app_report_startup(app: fastapi.FastAPI) -> None:
+    L = get_logger()
+    L.info("Application settings")
+    L.info("environment = %s", app.state.settings.environment )
+    L.info("db_connection_string = %s", app.state.settings.db_connection_string)
+    L.info("allow_appinfo = %s", app.state.settings.allow_appinfo)
+    L.info("service_pattern = %s", app.state.settings.service_pattern)
+    L.info("auto_introspection = %s", app.state.settings.auto_introspection)
+
+
 @contextlib.asynccontextmanager
 async def dbengine_lifespan(app: fastapi):
+    await app_report_startup(app)
     dbcnstr = app.state.settings.db_connection_string
     app.state.dbengine = get_engine(dbcnstr)
     yield
@@ -59,6 +82,7 @@ app = fastapi.FastAPI(
 )
 
 app.state.settings = get_settings()
+setup_logger(app)
 
 
 def get_relative_url_for(name: str, *args: typing.Any, **kwargs: typing.Any) -> str:
@@ -72,6 +96,7 @@ async def add_db_session_middleware(request: fastapi.Request, call_next):
         request.state.dbsession = dbsession
         response = await call_next(request)
         return response
+
 
 
 app.mount(
