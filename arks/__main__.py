@@ -36,7 +36,7 @@ def logging_name_to_level(name, default=logging.INFO):
     levels = logging.getLevelNamesMapping()
     try:
         return levels[name]
-    except KeyError as e:
+    except KeyError:
         pass
     return default
 
@@ -159,7 +159,7 @@ def records_to_db(
                     L.info("No changes for %s", uniq)
                 else:
                     _updated += 1
-                    L.info("Updated %s with % changes", uniq, n_changes)
+                    L.info("Updated %s with %s changes", uniq, n_changes)
             except sqlalchemy.exc.IntegrityError as e:
                 repository._session.rollback()
                 L.exception(e)
@@ -254,8 +254,18 @@ def get_info(config: appconfig.Settings) -> int:
 
 @cli.command("load-naans")
 @click.pass_obj
-@click.option("-s", "--source", default=None, help="Source JSON NAANs file or url")
+@click.option(
+    "-s",
+    "--source",
+    default=None,
+    help="Source JSON NAANs file or url"
+)
 def load_naans(config:appconfig.Settings, source:str) -> int:
+    """
+    Load the identifier definitions from a NAANs json file.
+
+    Default is specified in arks/config.py (overridden by settings)
+    """
     L = get_logger()
     L.info("Loading NAAN records from %s", source)
     records = []
