@@ -39,7 +39,7 @@ class Settings(rslv.config.Settings):
     # Templates used by this application
     template_dir: str = os.path.join(BASE_FOLDER, "templates")
     # The public naan and shoulder source URL
-    naans_source: str = "https://cdluc3.github.io/naan_reg_public/naan_records.json"
+    naans_source: str = "https://cdluc3.github.io/naan_reg_priv/naan_records.json"
     # Pattern to match this service URL endpoint, and if requests
     # match then trim the service url from the PID
     # For not uncommon situations where pid = "https://n2t.net/ark:/12345/foo"
