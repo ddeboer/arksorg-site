@@ -71,3 +71,9 @@ To check the status of the Nginx Unit service:
 ```
 sudo cdlsysctl status unit
 ```
+
+To restart the application under `unitd` (without restarting the `unitd` service):
+
+```
+curl -X GET --unix-socket /var/run/unit/control.sock http://localhost/control/applications/rslv/restart | jq '.'
+```
