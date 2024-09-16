@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+
+Person(client, "Client", "Resolver client")
+Person(editor, "Editor", "ARKs.org site content editor")
+Person(admin, "Administrator", "Responsible for site admiinistration and maintenance")
+Container(arksorg, "ARKs.org", "ARKs.org application")
+Container(arksite, "arks.github.io", "arks-org/arks.github.io Jekyll site content")
+System_Ext(puppet, "uc3-ops-puppet-hiera", "Puppet control")
+Container(ansible, "Ansible Scripts", "Ansible scripts for deployment and update")
+System_Ext(naans, "NAAN Registry", "Source of truth for all ARK NAAN records and some ARK shoulder records")
+Rel(arksite, arksorg, "Projvides website content")
+Rel(client, arksorg, "<HTTP>", "Resolve identifier")
+Rel(editor, arksite, "<GIT>", "Edit content on GitHub site")
+Rel(admin, ansible, "Administer")
+Rel(puppet, ansible, "Automate")
+Rel(ansible, arksorg, "Manage")
+Rel(naans, arksorg, "<HTTP>", "Get public NAAN and Shoulder records")
+@enduml

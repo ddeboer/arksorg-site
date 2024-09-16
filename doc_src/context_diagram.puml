@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Context>
+
+Person(client, "Client", "Resolver client")
+Person(editor, "Editor", "ARKs.org site content editor")
+Person(admin, "Administrator", "Responsible for site admiinistration and maintenance")
+System(arksorg, "ARKs.org", "ARKs.org website and ARK identifier resolution service")
+System_Ext(n2t, "N2T.net", "Identifier scheme resolver, directs ARK identifier resolution to ARKs.org")
+System_Ext(naans, "NAAN Registry", "Source of truth for all ARK NAAN records and some ARK shoulder records")
+System_Ext(osearch, "Open Search", "Log ingest and serach (internal use)")
+Rel(client, arksorg, "<HTTP>", "Resolve identifier")
+Rel(editor, arksorg, "<GIT>", "Edit content on GitHub site")
+Rel_L(admin, arksorg, "Administer", "Puppet, Ansible, manual")
+Rel(n2t, arksorg, "<HTTP>", "Redirects ARK identifier resolution to ARKs.org")
+Rel_U(naans, arksorg, "<HTTP>", "Get public NAAN and Shoulder records")
+Rel(arksorg, osearch, "Ingest")
+Rel(admin, osearch, "Review")
+@enduml
