@@ -41,7 +41,7 @@
       chdir: "{{deploy_dir}}"
       virtualenv: "{{deploy_dir}}/venv"
       virtualenv_command: "python3.11 -m venv"
-      requirements: requirements.txt
+      requirements: "{{deploy_dir}}/requirements.txt"
       #name: .
       editable: true
 
