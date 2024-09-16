@@ -35,14 +35,21 @@
       chdir: "{{deploy_dir}}/arks.github.io"
       cmd: "bundle exec jekyll build --config _config.yml,../_config.local.yml"
 
-  - name: Install arks application
+  - name: Install arks application dependencies
     ansible.builtin.pip:
       state: present
       chdir: "{{deploy_dir}}"
       virtualenv: "{{deploy_dir}}/venv"
       virtualenv_command: "python3.11 -m venv"
       requirements: "requirements.txt"
-      #name: .
+
+  - name: Install arks application
+    ansible.builtin.pip:
+      state: present
+      chdir: "{{deploy_dir}}"
+      virtualenv: "{{deploy_dir}}/venv"
+      virtualenv_command: "python3.11 -m venv"
+      name: .
       editable: true
 
   - name: Print unit.json contents
