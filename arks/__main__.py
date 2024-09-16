@@ -75,7 +75,7 @@ def records_to_db(
     repository = rslv.lib_rslv.piddefine.PidDefinitionCatalog(session)
     # check to see if the list of records is more recent than the repository
     meta = repository.get_metadata()
-    records_modified_date = datetime.datetime.fromisoformat(records["metadata"]["updated"])
+    records_modified_date = datetime.datetime.fromisoformat(records["metadata"]["date_modified"])
     _total = 0
     _added = 0
     _updated = 0

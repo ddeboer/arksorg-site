@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+
+Person(client, "Client", "Resolver client")
+Person(editor, "Editor", "ARKs.org site content editor")
+Person(admin, "Administrator", "Responsible for site admiinistration and maintenance")
+Container(arksite, "arks.github.io", "arks-org/arks.github.io respository")
+Container_Boundary(arksorg, "ARKs.org", "ARKs.org application") {
+  Component(static, "ARKs.org static pages", "HTML content of arks.org.")
+  Component(resolver, "ARKs.org resolver", "Resolver application")
+  Component(unitd, "Unitd Server", "WSGI + static web server")
+  Component(elb, "Elastic Load Balancer", "AWS load balancer service")
+  Component(main, "arks", "Python script")
+  ComponentDb(config, "Authority Records", "Sqlite store of service configuration.")
+}
+System_Ext(naans, "NAAN Registry", "Source of truth for all ARK NAAN records and some ARK shoulder records")
+Rel(arksite, static, "Projvides website content")
+Rel(client, elb, "<HTTPS>", "Resolve identifier")
+Rel(unitd, elb, "<HTTP:18880>")
+Rel(resolver, unitd, "WSGI host")
+Rel(static, unitd, "Host")
+Rel(main, config, "Build and manage resolver configuration")
+Rel(config, resolver, "Configuration")
+Rel(editor, arksite, "<GIT>", "Edit content on GitHub site")
+Rel(admin, arksorg, "Administer")
+Rel(naans, main, "<HTTP>", "Get public NAAN and Shoulder records")
+@enduml
