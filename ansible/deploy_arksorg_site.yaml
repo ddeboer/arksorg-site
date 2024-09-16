@@ -41,7 +41,8 @@
       chdir: "{{deploy_dir}}"
       virtualenv: "{{deploy_dir}}/venv"
       virtualenv_command: "python3.11 -m venv"
-      name: .
+      requirements: requirements.txt
+      #name: .
       editable: true
 
   - name: Print unit.json contents
