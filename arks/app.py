@@ -4,6 +4,7 @@ import logging
 import typing
 
 import fastapi
+import fastapi.middleware.cors
 import fastapi.staticfiles
 import fastapi.templating
 import sqlalchemy.orm
@@ -84,6 +85,21 @@ app = fastapi.FastAPI(
 app.state.settings = get_settings()
 setup_logger(app)
 
+# Enables CORS for UIs on different domains
+app.add_middleware(
+    fastapi.middleware.cors.CORSMiddleware,
+    allow_origins=[
+        "*",
+    ],
+    allow_credentials=True,
+    allow_methods=[
+        "GET",
+        "HEAD",
+    ],
+    allow_headers=[
+        "*",
+    ],
+)
 
 def get_relative_url_for(name: str, *args: typing.Any, **kwargs: typing.Any) -> str:
     _path = kwargs.get("path", "/")
