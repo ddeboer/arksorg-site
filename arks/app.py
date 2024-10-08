@@ -88,17 +88,10 @@ setup_logger(app)
 # Enables CORS for UIs on different domains
 app.add_middleware(
     fastapi.middleware.cors.CORSMiddleware,
-    allow_origins=[
-        "*",
-    ],
+    allow_origins=["*", ],
     allow_credentials=True,
-    allow_methods=[
-        "GET",
-        "HEAD",
-    ],
-    allow_headers=[
-        "*",
-    ],
+    allow_methods=["*", ],
+    allow_headers=["*", ],
 )
 
 def get_relative_url_for(name: str, *args: typing.Any, **kwargs: typing.Any) -> str:
