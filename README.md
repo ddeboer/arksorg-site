@@ -46,6 +46,7 @@ ARKS_NAANS_SOURCE="https://cdluc3.github.io/naan_reg_priv/naan_records.json"
 5. Configure the local NAAN database
 
 ```
+mkdir data
 python -m arks -c dev-config.env load-naans
 ```
 
@@ -53,6 +54,14 @@ Note that this operation should be run periodically to keep the local NAAN regis
 
 
 6. Run the local server
+
+Install `uvicorn` to enable the local server:
+
+```
+pip install uvicorn
+```
+
+Then run the local server:
 
 ```
 python -m arks -c dev-config.env serve
