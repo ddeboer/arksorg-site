@@ -1,4 +1,0 @@
-httpx
-click
-naan_model @ git+https://github.com/CDLUC3/naan_model.git
-hopper @ git+https://github.com/datadavev/looseroo.git
